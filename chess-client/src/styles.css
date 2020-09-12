@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+.board {
+  width: 80vw;
+  margin: 0 auto;
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px gray solid;
+}
+
+.tile {
+  width: 10vw;
+  height: 10vw;
+}
+
+.row:nth-child(even) .tile:nth-child(odd) {
+  background-color: gray;
+}
+
+.row:nth-child(odd) .tile:nth-child(even) {
+  background-color: gray;
+}

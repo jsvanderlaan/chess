@@ -1,0 +1,9 @@
+<div class="board">
+  <ng-container *ngFor="let row of board">
+    <div class="row">
+      <ng-container *ngFor="let column of row">
+        <div class="tile">{{ column.text() }}</div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
