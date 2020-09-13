@@ -13,10 +13,30 @@
   height: 10vw;
 }
 
-.row:nth-child(even) .tile:nth-child(odd) {
+.column:nth-child(even) .tile:nth-child(odd) {
   background-color: gray;
 }
 
-.row:nth-child(odd) .tile:nth-child(even) {
+.column:nth-child(odd) .tile:nth-child(even) {
   background-color: gray;
+}
+
+.column:nth-child(even) .tile:nth-child(even) {
+  background-color: lightgray;
+}
+
+.column:nth-child(odd) .tile:nth-child(odd) {
+  background-color: lightgray;
+}
+
+.tile:hover {
+  color: red;
+}
+
+.selected {
+  background-color: lightskyblue;
+}
+
+.possible-move {
+  background-color: lightsteelblue;
 }

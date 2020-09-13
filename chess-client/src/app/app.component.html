@@ -1,8 +1,14 @@
 <div class="board">
-  <ng-container *ngFor="let row of board">
-    <div class="row">
-      <ng-container *ngFor="let column of row">
-        <div class="tile">{{ column.text() }}</div>
+  <ng-container *ngFor="let column of board">
+    <div class="column">
+      <ng-container *ngFor="let tile of column">
+        <div class="tile" (click)="onTileClick(tile)">
+          <div>{{ tileToText(tile) }}</div>
+          <div>({{ tile.row }}, {{ tile.col }})</div>
+          <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div>
+          <div *ngIf="isSelected(tile)">selected</div>
+          <div *ngIf="canMoveHere(tile)">can move here</div>
+        </div>
       </ng-container>
     </div>
   </ng-container>
