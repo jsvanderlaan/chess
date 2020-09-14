@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, ɵpublishDefaultGlobalUtils } from "@angular/core";
+import { Utils } from "src/core/utils";
 import { StateService } from "src/core/state.service";
-import { UtilService } from "src/core/util.service";
-import { Piece, Tile, Position } from "src/interfaces";
+import { Piece, Tile, Position, Color } from "src/interfaces";
 
 @Component({
   selector: "app-root",
@@ -13,21 +13,23 @@ export class AppComponent {
   pieces: Piece[] = [];
   selected: Tile | null = null;
   possibleMoves: Position[] = [];
+  turn: Color;
 
-  constructor(state: StateService, private readonly utilService: UtilService) {
+  constructor(state: StateService) {
     this.board = state.getBoard();
     this.pieces = state.getPieces();
+    this.turn = state.getTurn();
   }
 
-  tileToText = (tile: Tile): string => this.utilService.positionToText(tile);
-  getPiece = (tile: Tile): Piece | null => this.utilService.getPiece(tile, this.pieces);
+  tileToText = (position: Position): string => Utils.positionToText(position);
+  getPiece = (position: Position): Piece | null => Utils.getPiece(position, this.pieces);
   onTileClick = (tile: Tile) => {
     this.selected = tile;
     const piece = this.getPiece(tile);
     if (!piece) return;
-    this.possibleMoves = this.utilService.posibleMoves(piece, this.pieces);
+    this.possibleMoves = Utils.moves(this.pieces, piece);
   };
-  isSelected = (position: Position) => this.selected && this.selected.row === position.row && this.selected.col === position.col;
-  canMoveHere = (position: Position) =>
-    this.possibleMoves.filter((pos) => pos.col === position.col && pos.row === position.row)?.length > 0;
+  isSelected = (position: Position) => this.selected && Utils.atPosition(this.selected)(position);
+  canMoveHere = (position: Position) => this.possibleMoves.filter(Utils.atPosition(position))?.length > 0;
+  canInteract = (position: Position) => Utils.isPieceOfColor({ color: this.turn }, this.getPiece(position));
 }

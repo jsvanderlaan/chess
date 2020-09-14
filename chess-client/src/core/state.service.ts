@@ -1,19 +1,17 @@
 import { Injectable } from "@angular/core";
-import { startingBoard, startingPieces } from "src/defaults";
-import { Piece, Tile } from "src/interfaces";
-import { UtilService } from "./util.service";
+import { Defaults } from "src/defaults";
+import { Color, Piece, Tile } from "src/interfaces";
 
 @Injectable({
   providedIn: "root",
 })
 export class StateService {
-  private readonly board: Tile[][] = startingBoard;
-  private readonly pieces: Piece[] = startingPieces;
-
-  constructor(private readonly utilService: UtilService) {}
+  private readonly board: Tile[][] = Defaults.startingBoard;
+  private readonly pieces: Piece[] = Defaults.startingPieces;
+  private turn: Color = Color.white;
 
   getBoard = (): Tile[][] => this.board;
   getPieces = (): Piece[] => this.pieces;
-
-  //tiles = () => this.utilService.toTiles(this.board);
+  getTurn = () => this.turn;
+  setTurn = (color) => (this.turn = color);
 }
