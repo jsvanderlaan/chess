@@ -1,7 +1,7 @@
-import { Color, Piece, Tile, Type, Direction } from "./interfaces";
+import { Color, Piece, Position, Type } from "./interfaces";
 
 export class Defaults {
-  public static readonly startingBoard: Tile[][] = Array.from({ length: 8 }, (_, col) =>
+  public static readonly startingBoard: Position[][] = Array.from({ length: 8 }, (_, col) =>
     Array.from({ length: 8 }, (_, row) => ({
       row: 7 - row,
       col,

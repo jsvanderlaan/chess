@@ -1,8 +1,3 @@
-export interface Tile {
-  row: number;
-  col: number;
-}
-
 export interface Piece {
   type: Type;
   row: number;
