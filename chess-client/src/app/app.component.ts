@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Utils } from "src/core/utils";
 import { StateService } from "src/core/state.service";
-import { Piece, Position, Color, Move } from "src/interfaces";
+import { Piece, Position, Color, Move, Attack, GameState } from "src/interfaces";
 import { Defaults } from "src/defaults";
 
 @Component({
@@ -15,6 +15,7 @@ export class AppComponent {
   selected: Piece | null = null;
   possibleMoves: Move[] = [];
   turn: Color;
+  gameState: GameState;
 
   constructor(private readonly _state: StateService) {
     this.board = Defaults.startingBoard;
@@ -23,16 +24,18 @@ export class AppComponent {
     _state
       .moves$()
       .subscribe(
-        (moves) =>
+        (moves: Move[]) =>
           (this.canMoveHere = (position: Position) => moves.filter(Utils.moveIsOfPiece(this.selected)).some(Utils.moveHasTarget(position)))
       );
     _state
       .attacks$()
       .subscribe(
-        (attacks) =>
+        (attacks: Attack[]) =>
           (this.canAttackHere = (position: Position) =>
             attacks.filter(Utils.attackIsOfPiece(this.selected)).some(Utils.attackHasTarget(this.getPiece(position))))
       );
+    _state.selected$().subscribe((selected) => (this.selected = selected));
+    _state.gameState$().subscribe((gameState) => (this.gameState = gameState));
   }
 
   check = () => Utils.checkForColor(this.pieces, this.turn);
@@ -42,38 +45,33 @@ export class AppComponent {
   onTileClick = (tile: Position) => {
     const piece = this.getPiece(tile);
     if (!this.selected) {
-      if (piece) this.selectPiece(piece);
+      if (piece) {
+        return this._state.selectPiece(piece);
+      }
       return;
     }
     const isCurrentPieceMyPiece = this.isMyPiece(this.selected);
     if (piece) {
       if (isCurrentPieceMyPiece && this.canAttackHere(tile)) {
-        this._state.attackPiece({ move: { piece: this.selected, target: tile }, target: piece });
-        this.deselectPiece();
-        return;
+        return this._state.attackPiece({ move: { piece: this.selected, target: tile }, target: piece });
       }
-      const pieceAlreadySelected = Utils.isSamePosition(this.selected)(tile);
-      if (pieceAlreadySelected) return this.deselectPiece();
-      return this.selectPiece(piece);
+      if (this.isSelected(tile)) {
+        return this._state.deselectPiece();
+      }
+      return this._state.selectPiece(piece);
     }
     if (this.canMoveHere(tile) && isCurrentPieceMyPiece) {
-      this._state.movePiece({ piece: this.selected, target: tile });
-      this.deselectPiece();
-      return;
+      return this._state.movePiece({ piece: this.selected, target: tile });
     }
-    this.deselectPiece();
-  };
-  private deselectPiece = () => {
-    this.selected = null;
-    this.possibleMoves = [];
-  };
-  private selectPiece = (piece: Piece) => {
-    this.selected = piece;
-    this.possibleMoves = Utils.movesForPiece(this.pieces)(piece);
+    this._state.deselectPiece();
   };
   isSelected = (position: Position) => this.selected && Utils.isSamePosition(this.selected)(position);
-  canMoveHere = (positon: Position) => false;
-  canAttackHere = (position: Position) => false;
-  canInteract = (position: Position) => this.isMyPiece(this.getPiece(position)); // plus has possible moves
-  private isMyPiece = (piece: Piece) => Utils.isPieceOfColor({ color: this.turn }, piece);
+  canMoveHere;
+  canAttackHere;
+  canInteract = (position: Position) => {
+    const piece = this.getPiece(position);
+    return this.isMyPiece(piece) && this._state.pieceCanMove(piece);
+  };
+  private isMyPiece = (piece: Piece) => Utils.isPieceOfColor(this.turn)(piece);
+  restart = this._state.restart;
 }

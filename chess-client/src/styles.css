@@ -6,6 +6,8 @@
 
 :root {
   --width: min(80vw, 80vh);
+  --dark: #383838;
+  --ligth: gray;
 }
 
 body {
@@ -18,7 +20,7 @@ body {
   margin-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  border: 2px gray solid;
+  /* border: 2px gray solid; */
 }
 
 .tile {
@@ -27,19 +29,19 @@ body {
 }
 
 .column:nth-child(even) .tile:nth-child(odd) {
-  background-color: #383838;
+  background-color: var(--dark);
 }
 
 .column:nth-child(odd) .tile:nth-child(even) {
-  background-color: #383838;
+  background-color: var(--dark);
 }
 
 .column:nth-child(even) .tile:nth-child(even) {
-  background-color: gray;
+  background-color: var(--ligth);
 }
 
 .column:nth-child(odd) .tile:nth-child(odd) {
-  background-color: gray;
+  background-color: var(--ligth);
 }
 
 .tile:hover {

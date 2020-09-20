@@ -16,3 +16,7 @@
   </ng-container>
 </div>
 <div *ngIf="check()" style="color: white">CHECK!!!</div>
+<div style="color: white">{{ gameState }}</div>
+<div>
+  <button (click)="restart()">New game</button>
+</div>

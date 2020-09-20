@@ -12,6 +12,14 @@ export enum Color {
   black = "black",
 }
 
+export enum GameState {
+  whitesTurn = "White's turn",
+  BlacksTurn = "Black's turn",
+  whiteWin = "White wins",
+  blackWin = "Black wins",
+  remise = "Remise",
+}
+
 export interface Position {
   col: number;
   row: number;

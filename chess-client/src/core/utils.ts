@@ -15,25 +15,27 @@ export class Utils {
   ]);
 
   static flatten = <T>(arr: T[][]): T[] => [].concat(...arr);
-
+  static last = (arr: any[]) => arr[arr.length - 1];
   static movesInDirections = (directions: Direction[], maxIterations: number = Number.MAX_VALUE) => (
     pieces: Piece[],
     piece: Piece
   ): Move[] =>
     Utils.flatten(directions.map((direction: Direction) => [...Utils.movesInDirection(pieces, piece, direction, maxIterations)]));
 
-  static attackInDirections = (directions: Direction[], maxIterations: number = Number.MAX_VALUE) => (
+  static attacksInDirections = (directions: Direction[], maxIterations: number = Number.MAX_VALUE) => (
     pieces: Piece[],
     piece: Piece
   ): Attack[] => Utils.flatten(directions.map((direction: Direction) => Utils.attackInDirection(pieces, piece, direction, maxIterations)));
 
   static basicMoveFilter = (pieces: Piece[], piece: Piece) => (position: Position) =>
-    !Utils.isPieceOfColor(piece, Utils.getPiece(position, pieces)) && Utils.isOnBoard(position);
+    !Utils.arePiecesSameColor(piece)(Utils.getPiece(position, pieces)) && Utils.isOnBoard(position);
   static isOnBoard = ({ row, col }: Position) => row < 8 && row >= 0 && col < 8 && col >= 0;
-  static isPieceOfColor = (piece: { color: Color } | null, otherPiece: { color: Color } | null) =>
-    piece && piece?.color === otherPiece?.color;
+  static arePiecesSameColor = (piece: Piece | null) => (otherPiece: Piece | null) => piece && Utils.isPieceOfColor(piece.color)(otherPiece);
+  static isPieceOfColor = (color: Color) => (piece: Piece | null) => piece && piece?.color === color;
   static pieceIsNotTaken = (piece: Piece) => !piece.taken;
-  static filterTakenPieces = (pieces: Piece[]) => pieces.filter(Utils.pieceIsNotTaken);
+  static filterTakenPieces = (pieces: Piece[]) => {
+    return pieces.filter(Utils.pieceIsNotTaken);
+  };
 
   static kingMoves = Utils.movesInDirections(Directions.king, 1); // Add rokade
   static queenMoves = Utils.movesInDirections(Directions.queen);
@@ -43,19 +45,19 @@ export class Utils {
   static pawnMoves = (pieces: Piece[], piece: Piece) =>
     Utils.movesInDirections(Directions.pawnMove(piece.color), piece.moved ? 1 : 2)(pieces, piece);
 
-  static kingAttacks = Utils.attackInDirections(Directions.king, 1);
-  static queenAttacks = Utils.attackInDirections(Directions.queen);
-  static bishopAttacks = Utils.attackInDirections(Directions.bishop);
-  static rookAttacks = Utils.attackInDirections(Directions.rook);
-  static knightAttacks = Utils.attackInDirections(Directions.knight, 1);
-  static pawnAttacks = (pieces: Piece[], piece: Piece) => Utils.attackInDirections(Directions.pawnAttack(piece.color), 1)(pieces, piece); // Add en passade / wanneer pion vorige beurt 2 stappen, dan kan je onderscheppen
+  static kingAttacks = Utils.attacksInDirections(Directions.king, 1);
+  static queenAttacks = Utils.attacksInDirections(Directions.queen);
+  static bishopAttacks = Utils.attacksInDirections(Directions.bishop);
+  static rookAttacks = Utils.attacksInDirections(Directions.rook);
+  static knightAttacks = Utils.attacksInDirections(Directions.knight, 1);
+  static pawnAttacks = (pieces: Piece[], piece: Piece) => Utils.attacksInDirections(Directions.pawnAttack(piece.color), 1)(pieces, piece); // Add en passade / wanneer pion vorige beurt 2 stappen, dan kan je onderscheppen
 
   static movesForPiece = (pieces: Piece[]) => (piece: Piece): Move[] => Utils.moveMaps.get(piece.type)(pieces, piece);
   static moves = (pieces: Piece[]) => Utils.flatten(pieces.map(Utils.movesForPiece(pieces)));
-  static filteredMoves = (pieces: Piece[]) => Utils.moves(pieces).filter(Utils.noCheckForMove(pieces)); // Deze nog pipen from moves
+  static filteredMoves = (pieces: Piece[]) => Utils.moves(pieces).filter(Utils.noCheckForMove(pieces)); // Deze nog pipen from moves ?? zeker?
   static attacksForPiece = (pieces: Piece[]) => (piece: Piece): Attack[] => Utils.attackMaps.get(piece.type)(pieces, piece);
   static attacks = (pieces: Piece[]) => Utils.flatten(pieces.map(Utils.attacksForPiece(pieces)));
-  static filteredAttacks = (pieces: Piece[]) => Utils.attacks(pieces).filter((attack) => Utils.noCheckForAttack(pieces)(attack)); // Todo: Tenzij attack takes piece that makes check
+  static filteredAttacks = (pieces: Piece[]) => Utils.attacks(pieces).filter((attack) => Utils.noCheckForAttack(pieces)(attack));
 
   static movePiece = (pieces: Piece[], { piece, target }: Move) =>
     pieces.map((currentPiece) =>
@@ -121,7 +123,7 @@ export class Utils {
     while (Utils.isOnBoard(currPos) && iteration < maxIterations) {
       const currPiece = Utils.getPiece(currPos, pieces);
       if (currPiece) {
-        return !this.isPieceOfColor(currPiece, piece) ? [{ move: { piece: piece, target: currPos }, target: currPiece }] : [];
+        return !this.arePiecesSameColor(currPiece)(piece) ? [{ move: { piece: piece, target: currPos }, target: currPiece }] : [];
       }
       currPos = Utils.travelInDirection(currPos)(direction);
       iteration++;
