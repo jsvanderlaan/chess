@@ -4,12 +4,16 @@
   padding: 0;
 }
 
+:root {
+  --width: min(80vw, 80vh);
+}
+
 body {
   background-color: black;
 }
 
 .board {
-  width: 80vw;
+  width: var(--width);
   margin: 0 auto;
   margin-top: 2rem;
   display: flex;
@@ -18,8 +22,8 @@ body {
 }
 
 .tile {
-  width: 10vw;
-  height: 10vw;
+  width: calc(var(--width) / 8);
+  height: calc(var(--width) / 8);
 }
 
 .column:nth-child(even) .tile:nth-child(odd) {

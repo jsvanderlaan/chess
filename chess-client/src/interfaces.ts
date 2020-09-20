@@ -17,6 +17,16 @@ export interface Position {
   row: number;
 }
 
+export interface Move {
+  piece: Piece;
+  target: Position;
+}
+
+export interface Attack {
+  move: Move;
+  target: Piece;
+}
+
 export interface Direction {
   vertical: number;
   horizontal: number;
@@ -46,6 +56,8 @@ export class Directions {
     { vertical: 2, horizontal: 1 },
   ];
   public static readonly pawnMove = (color: Color) => (color === Color.white ? [Directions.up] : [Directions.down]);
+  public static readonly pawnAttack = (color: Color) =>
+    color === Color.white ? [Directions.upRight, Directions.upLeft] : [Directions.downRight, Directions.downLeft];
 }
 
 export enum Type {

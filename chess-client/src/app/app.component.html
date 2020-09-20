@@ -8,9 +8,11 @@
           <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div>
           <div *ngIf="isSelected(tile)">selected</div>
           <div *ngIf="canMoveHere(tile)">can move here</div>
+          <div *ngIf="canAttackHere(tile)">can attack here</div>
           <div *ngIf="canInteract(tile)">can interact</div>
         </div>
       </ng-container>
     </div>
   </ng-container>
 </div>
+<div *ngIf="check()" style="color: white">CHECK!!!</div>
