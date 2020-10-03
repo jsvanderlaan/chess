@@ -5,8 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --prod",
+    "copy": "scp -r dist/chess-client jurre@rpi-white.local:/tmp/jurre.dev",
+    "nginx": "ssh jurre@rpi-white.local 'sudo /code/deploy-rpi/nginx-static.sh -n jurre.dev'",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "deploy": "npm run build:prod && npm run copy && npm run nginx"
   },
   "private": true,
   "dependencies": {

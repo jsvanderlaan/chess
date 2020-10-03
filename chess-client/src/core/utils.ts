@@ -33,9 +33,7 @@ export class Utils {
   static arePiecesSameColor = (piece: Piece | null) => (otherPiece: Piece | null) => piece && Utils.isPieceOfColor(piece.color)(otherPiece);
   static isPieceOfColor = (color: Color) => (piece: Piece | null) => piece && piece?.color === color;
   static pieceIsNotTaken = (piece: Piece) => !piece.taken;
-  static filterTakenPieces = (pieces: Piece[]) => {
-    return pieces.filter(Utils.pieceIsNotTaken);
-  };
+  static filterTakenPieces = (pieces: Piece[]) => pieces.filter(Utils.pieceIsNotTaken);
 
   static kingMoves = Utils.movesInDirections(Directions.king, 1); // Add rokade
   static queenMoves = Utils.movesInDirections(Directions.queen);
@@ -54,7 +52,8 @@ export class Utils {
 
   static movesForPiece = (pieces: Piece[]) => (piece: Piece): Move[] => Utils.moveMaps.get(piece.type)(pieces, piece);
   static moves = (pieces: Piece[]) => Utils.flatten(pieces.map(Utils.movesForPiece(pieces)));
-  static filteredMoves = (pieces: Piece[]) => Utils.moves(pieces).filter(Utils.noCheckForMove(pieces)); // Deze nog pipen from moves ?? zeker?
+  static filteredMoves = (pieces: Piece[]) => Utils.moves(pieces).filter(Utils.noCheckForMove(pieces));
+
   static attacksForPiece = (pieces: Piece[]) => (piece: Piece): Attack[] => Utils.attackMaps.get(piece.type)(pieces, piece);
   static attacks = (pieces: Piece[]) => Utils.flatten(pieces.map(Utils.attacksForPiece(pieces)));
   static filteredAttacks = (pieces: Piece[]) => Utils.attacks(pieces).filter((attack) => Utils.noCheckForAttack(pieces)(attack));
@@ -72,7 +71,10 @@ export class Utils {
     !Utils.checkForColor(Utils.filterTakenPieces(Utils.attackPiece(pieces, attack)), attack.move.piece.color);
   static checkForColor = (pieces: Piece[], color: Color) => {
     const yourKing = pieces.find((piece) => piece.type === Type.king && piece.color === color);
-    return pieces.some((piece) => Utils.attacks(pieces).filter(Utils.attackIsOfPiece(piece)).some(Utils.attackHasTarget(yourKing)));
+    const attacks = Utils.attacks(pieces);
+    return pieces
+      .filter((piece) => piece.color !== color)
+      .some((piece) => attacks.filter(Utils.attackIsOfPiece(piece)).some(Utils.attackHasTarget(yourKing)));
   };
 
   static getPiece = (position: Position, pieces: Piece[]): Piece | null => pieces.find(Utils.isSamePosition(position));

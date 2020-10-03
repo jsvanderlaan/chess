@@ -10,68 +10,53 @@ import { Defaults } from "src/defaults";
   styles: [],
 })
 export class AppComponent {
-  board: Position[][] = [];
-  pieces: Piece[] = [];
-  selected: Piece | null = null;
-  possibleMoves: Move[] = [];
-  turn: Color;
-  gameState: GameState;
+  board: Position[][] = Defaults.startingBoard;
+  private selected: Piece | null = null;
+  private turn: Color;
 
-  constructor(private readonly _state: StateService) {
-    this.board = Defaults.startingBoard;
-    _state.pieces$().subscribe((pieces) => (this.pieces = pieces));
-    _state.turn$().subscribe((turn) => (this.turn = turn));
-    _state
-      .moves$()
-      .subscribe(
-        (moves: Move[]) =>
-          (this.canMoveHere = (position: Position) => moves.filter(Utils.moveIsOfPiece(this.selected)).some(Utils.moveHasTarget(position)))
-      );
-    _state
-      .attacks$()
-      .subscribe(
-        (attacks: Attack[]) =>
-          (this.canAttackHere = (position: Position) =>
-            attacks.filter(Utils.attackIsOfPiece(this.selected)).some(Utils.attackHasTarget(this.getPiece(position))))
-      );
-    _state.selected$().subscribe((selected) => (this.selected = selected));
-    _state.gameState$().subscribe((gameState) => (this.gameState = gameState));
+  constructor(readonly state: StateService) {
+    state.turn$().subscribe((turn) => (this.turn = turn));
+    state.selected$().subscribe((selected) => (this.selected = selected));
   }
 
-  check = () => Utils.checkForColor(this.pieces, this.turn);
+  check = () => Utils.checkForColor(this.state.pieces, this.turn);
 
   tileToText = (position: Position): string => Utils.positionToText(position);
-  getPiece = (position: Position): Piece | null => Utils.getPiece(position, this.pieces);
+  getPiece = (position: Position): Piece | null => Utils.getPiece(position, this.state.pieces);
+  getSvg = (position: Position) => {
+    const piece = this.getPiece(position);
+    return `assets/${piece?.color}-${piece?.type}.svg`;
+  };
   onTileClick = (tile: Position) => {
     const piece = this.getPiece(tile);
     if (!this.selected) {
       if (piece) {
-        return this._state.selectPiece(piece);
+        return this.state.selectPiece(piece);
       }
       return;
     }
     const isCurrentPieceMyPiece = this.isMyPiece(this.selected);
     if (piece) {
       if (isCurrentPieceMyPiece && this.canAttackHere(tile)) {
-        return this._state.attackPiece({ move: { piece: this.selected, target: tile }, target: piece });
+        return this.state.attackPiece({ move: { piece: this.selected, target: tile }, target: piece });
       }
       if (this.isSelected(tile)) {
-        return this._state.deselectPiece();
+        return this.state.deselectPiece();
       }
-      return this._state.selectPiece(piece);
+      return this.state.selectPiece(piece);
     }
     if (this.canMoveHere(tile) && isCurrentPieceMyPiece) {
-      return this._state.movePiece({ piece: this.selected, target: tile });
+      return this.state.movePiece({ piece: this.selected, target: tile });
     }
-    this._state.deselectPiece();
+    this.state.deselectPiece();
   };
   isSelected = (position: Position) => this.selected && Utils.isSamePosition(this.selected)(position);
-  canMoveHere;
-  canAttackHere;
+  canMoveHere = (position: Position) => this.state.moves.filter(Utils.moveIsOfPiece(this.selected)).some(Utils.moveHasTarget(position));
+  canAttackHere = (position: Position) =>
+    this.state.attacks.filter(Utils.attackIsOfPiece(this.selected)).some(Utils.attackHasTarget(this.getPiece(position)));
   canInteract = (position: Position) => {
     const piece = this.getPiece(position);
-    return this.isMyPiece(piece) && this._state.pieceCanMove(piece);
+    return this.isMyPiece(piece) && this.state.pieceCanMove(piece);
   };
   private isMyPiece = (piece: Piece) => Utils.isPieceOfColor(this.turn)(piece);
-  restart = this._state.restart;
 }

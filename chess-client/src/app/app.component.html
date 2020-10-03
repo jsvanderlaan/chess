@@ -3,20 +3,22 @@
     <div class="column">
       <ng-container *ngFor="let tile of column">
         <div class="tile" (click)="onTileClick(tile)">
-          <div>{{ tileToText(tile) }}</div>
+          <!-- <img *ngIf="getPiece(tile)" [src]="getSvg(tile)" /> -->
+          <img *ngIf="getPiece(tile)" src="assets/{{ getPiece(tile)?.color }}-{{ getPiece(tile)?.type }}.svg" />
+          <!-- <div>{{ tileToText(tile) }}</div>
           <div>({{ tile.row }}, {{ tile.col }})</div>
           <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div>
           <div *ngIf="isSelected(tile)">selected</div>
-          <div *ngIf="canMoveHere(tile)">can move here</div>
           <div *ngIf="canAttackHere(tile)">can attack here</div>
-          <div *ngIf="canInteract(tile)">can interact</div>
+          <div *ngIf="canInteract(tile)">can interact</div> -->
+          <img *ngIf="canMoveHere(tile)" src="assets/can-move.svg" />
         </div>
       </ng-container>
     </div>
   </ng-container>
 </div>
 <div *ngIf="check()" style="color: white">CHECK!!!</div>
-<div style="color: white">{{ gameState }}</div>
+<div style="color: white">{{ state.gameState() }}</div>
 <div>
-  <button (click)="restart()">New game</button>
+  <button (click)="state.restart()">New game</button>
 </div>
