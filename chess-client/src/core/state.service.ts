@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Attack, Color, GameState, Move, Piece } from "src/interfaces";
+import { Attack, Color, GameState, Move, Piece, Type } from "src/interfaces";
 import { HubService } from "./hub.service";
 import { Utils } from "./utils";
 
@@ -56,14 +56,33 @@ export class StateService {
   };
 
   movePiece = (move: Move) => {
-    const stateAfterMove = Utils.movePiece(this.pieces, move);
-    // if rocade king move then get corresponsing rook move and perform move
-    // if pawn to otherside then cast to piece of choice, maybe first Queen??
+    let stateAfterMove = Utils.movePiece(this.pieces, move);
+
+    if (Utils.isCastlingMove(move)) {
+      const queenSide = move.target.col === 2;
+      const rook = Utils.getPiece({ row: move.piece.row, col: queenSide ? 0 : 7 }, this.pieces);
+      const rookMove: Move = { target: { row: move.piece.row, col: queenSide ? 3 : 5 }, piece: rook };
+      stateAfterMove = Utils.movePiece(stateAfterMove, rookMove);
+    }
+
+    // if pawn to otherside then cast to queen for now
+    if (Utils.isPromotionMove(move)) {
+      stateAfterMove = stateAfterMove.map((piece) => (Utils.isSamePosition(piece)(move.target) ? { ...piece, type: Type.queen } : piece));
+    }
+
     this._hub.connection.send("addState", stateAfterMove);
     this.deselectPiece();
   };
   attackPiece = (attack: Attack) => {
-    const stateAfterAttack = Utils.attackPiece(this.pieces, attack);
+    let stateAfterAttack = Utils.attackPiece(this.pieces, attack);
+
+    // if pawn to otherside then cast to queen for now
+    if (Utils.isPromotionMove(attack.move)) {
+      stateAfterAttack = stateAfterAttack.map((piece) =>
+        Utils.isSamePosition(piece)(attack.target) ? { ...piece, type: Type.queen } : piece
+      );
+    }
+
     this._hub.connection.send("addState", stateAfterAttack);
     this.deselectPiece();
   };

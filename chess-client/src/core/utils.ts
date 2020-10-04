@@ -42,6 +42,9 @@ export class Utils {
   static knightMoves = Utils.movesInDirections(Directions.knight, 1);
   static pawnMoves = (pieces: Piece[], piece: Piece) =>
     Utils.movesInDirections(Directions.pawnMove(piece.color), piece.moved ? 1 : 2)(pieces, piece);
+
+  static isCastlingMove = (move: Move) => move.piece.type === Type.king && Math.abs(move.piece.col - move.target.col) !== 1;
+  static isPromotionMove = (move: Move) => move.piece.type === Type.pawn && move.target.row === (move.piece.color === Color.white ? 7 : 0);
   static castlingMoves = (pieces: Piece[], moves: Move[], attacks: Attack[]): Move[] => {
     // king did not move
     const kingsThatHaveNotMoved = pieces.filter((piece) => piece.type === Type.king && !piece.taken && !piece.moved);
