@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Utils } from "src/core/utils";
 import { StateService } from "src/core/state.service";
-import { Piece, Position, Color, Move, Attack, GameState } from "src/interfaces";
+import { Piece, Position, Color } from "src/interfaces";
 import { Defaults } from "src/defaults";
 
 @Component({
