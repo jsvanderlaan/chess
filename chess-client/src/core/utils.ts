@@ -42,6 +42,69 @@ export class Utils {
   static knightMoves = Utils.movesInDirections(Directions.knight, 1);
   static pawnMoves = (pieces: Piece[], piece: Piece) =>
     Utils.movesInDirections(Directions.pawnMove(piece.color), piece.moved ? 1 : 2)(pieces, piece);
+  static castlingMoves = (pieces: Piece[], moves: Move[], attacks: Attack[]): Move[] => {
+    // king did not move
+    const kingsThatHaveNotMoved = pieces.filter((piece) => piece.type === Type.king && !piece.taken && !piece.moved);
+    if (kingsThatHaveNotMoved.length === 0) return [];
+
+    // rook did not move
+    const rooksThatHaveNotMoved = Utils.flatten(
+      kingsThatHaveNotMoved.map((king) => {
+        const color = king.color;
+        const rooksThatHaveNotMoved = pieces.filter(
+          (piece) => piece.type === Type.rook && !piece.taken && !piece.moved && piece.color === color
+        );
+        return rooksThatHaveNotMoved;
+      })
+    );
+    if (rooksThatHaveNotMoved.length === 0) return [];
+
+    // no pieces between rook and king
+    const rooksWithNoPiecesBetweenKingAndRook = rooksThatHaveNotMoved.filter((rook) => {
+      if (
+        (Utils.isSamePosition(rook)({ row: 7, col: 0 }) &&
+          !Utils.getPiece({ row: 7, col: 1 }, pieces) &&
+          !Utils.getPiece({ row: 7, col: 2 }, pieces) &&
+          !Utils.getPiece({ row: 7, col: 3 }, pieces)) ||
+        (Utils.isSamePosition(rook)({ row: 7, col: 7 }) &&
+          !Utils.getPiece({ row: 7, col: 6 }, pieces) &&
+          !Utils.getPiece({ row: 7, col: 5 }, pieces)) ||
+        (Utils.isSamePosition(rook)({ row: 0, col: 7 }) &&
+          !Utils.getPiece({ row: 0, col: 6 }, pieces) &&
+          !Utils.getPiece({ row: 0, col: 5 }, pieces)) ||
+        (Utils.isSamePosition(rook)({ row: 0, col: 0 }) &&
+          !Utils.getPiece({ row: 0, col: 1 }, pieces) &&
+          !Utils.getPiece({ row: 0, col: 2 }, pieces) &&
+          !Utils.getPiece({ row: 0, col: 3 }, pieces))
+      )
+        return true;
+
+      return false;
+    });
+    if (rooksWithNoPiecesBetweenKingAndRook.length === 0) return [];
+
+    // king and rook are not attacked
+    const rooksForWhichRookAndKingAreNotAttacked = rooksWithNoPiecesBetweenKingAndRook.filter((rook) => {
+      if (attacks.some((attack) => Utils.isSamePiece(attack.target)(rook))) return false;
+      const kingForRook = Utils.getPiece({ row: rook.color === Color.white ? 0 : 7, col: 4 }, pieces);
+      if (attacks.some((attack) => Utils.isSamePiece(attack.target)(kingForRook))) return false;
+      return true;
+    });
+    if (rooksForWhichRookAndKingAreNotAttacked.length === 0) return [];
+
+    // the square the king passes is not 'under attack'. e.g. no opponent piece can move there
+    const rooksThatCanCastle = rooksForWhichRookAndKingAreNotAttacked.filter(
+      (rook) =>
+        !moves
+          .filter((move) => !Utils.isPieceOfColor(rook.color)(move.piece))
+          .some((move) => Utils.isSamePosition(move.target)({ row: rook.row, col: rook.col === 0 ? 3 : 5 }))
+    );
+    if (rooksThatCanCastle.length === 0) return [];
+
+    return rooksThatCanCastle.map(
+      (rook): Move => ({ target: { row: rook.row, col: rook.col === 0 ? 2 : 6 }, piece: Utils.getPiece({ row: rook.row, col: 4 }, pieces) })
+    );
+  };
 
   static kingAttacks = Utils.attacksInDirections(Directions.king, 1);
   static queenAttacks = Utils.attacksInDirections(Directions.queen);
@@ -51,8 +114,11 @@ export class Utils {
   static pawnAttacks = (pieces: Piece[], piece: Piece) => Utils.attacksInDirections(Directions.pawnAttack(piece.color), 1)(pieces, piece); // Add en passade / wanneer pion vorige beurt 2 stappen, dan kan je onderscheppen
 
   static movesForPiece = (pieces: Piece[]) => (piece: Piece): Move[] => Utils.moveMaps.get(piece.type)(pieces, piece);
-  static moves = (pieces: Piece[]) => Utils.flatten(pieces.map(Utils.movesForPiece(pieces)));
-  static filteredMoves = (pieces: Piece[]) => Utils.moves(pieces).filter(Utils.noCheckForMove(pieces));
+  static moves = (pieces: Piece[], attacks: Attack[]) => {
+    const moves = Utils.flatten(pieces.map(Utils.movesForPiece(pieces)));
+    return moves.concat(Utils.castlingMoves(pieces, moves, attacks));
+  };
+  static filteredMoves = (pieces: Piece[], attacks: Attack[]) => Utils.moves(pieces, attacks).filter(Utils.noCheckForMove(pieces));
 
   static attacksForPiece = (pieces: Piece[]) => (piece: Piece): Attack[] => Utils.attackMaps.get(piece.type)(pieces, piece);
   static attacks = (pieces: Piece[]) => Utils.flatten(pieces.map(Utils.attacksForPiece(pieces)));

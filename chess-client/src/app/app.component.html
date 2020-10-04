@@ -5,20 +5,28 @@
         <div class="tile" (click)="onTileClick(tile)">
           <!-- <img *ngIf="getPiece(tile)" [src]="getSvg(tile)" /> -->
           <img *ngIf="getPiece(tile)" src="assets/{{ getPiece(tile)?.color }}-{{ getPiece(tile)?.type }}.svg" />
-          <!-- <div>{{ tileToText(tile) }}</div>
-          <div>({{ tile.row }}, {{ tile.col }})</div>
-          <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div>
-          <div *ngIf="isSelected(tile)">selected</div>
-          <div *ngIf="canAttackHere(tile)">can attack here</div>
-          <div *ngIf="canInteract(tile)">can interact</div> -->
+          <!-- <div>{{ tileToText(tile) }}</div> -->
+          <!-- <div>({{ tile.row }}, {{ tile.col }})</div> -->
+          <!-- <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div> -->
+          <!-- <div *ngIf="isSelected(tile)">selected</div> -->
+          <!-- <div *ngIf="canAttackHere(tile)">can attack here</div> -->
+          <!-- <div *ngIf="canInteract(tile)">can interact</div> -->
           <img *ngIf="canMoveHere(tile)" src="assets/can-move.svg" />
         </div>
       </ng-container>
     </div>
   </ng-container>
 </div>
-<div *ngIf="check()" style="color: white">CHECK!!!</div>
-<div style="color: white">{{ state.gameState() }}</div>
+<div *ngIf="check()">CHECK!!!</div>
+<div>{{ state.gameState() }}</div>
 <div>
   <button (click)="state.restart()">New game</button>
+</div>
+<div>The following does not yet work</div>
+<div>
+  <ul>
+    <li>casteling</li>
+    <li>en passant</li>
+    <li>promoting a pawn</li>
+  </ul>
 </div>

@@ -26,8 +26,8 @@ export class StateService {
       if (!states || states.length === 0) return;
       this.currentStates = states;
       this.pieces = Utils.filterTakenPieces(Utils.last(states));
-      this.moves = Utils.filteredMoves(this.pieces);
       this.attacks = Utils.filteredAttacks(this.pieces);
+      this.moves = Utils.filteredMoves(this.pieces, this.attacks);
     });
     this.turn.subscribe((turn) => (this.currentTurn = turn));
     _hub.connection.on("newGame", (whitesTurn, states) => {
