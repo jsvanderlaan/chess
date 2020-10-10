@@ -1,6 +1,6 @@
 # Todo
 
-- [ ] Castling / Rokade
+- [x] Castling / Rokade
 - [ ] En Passant
 - [ ] Pawn to other side
 

@@ -59,4 +59,5 @@ export class AppComponent {
     return this.isMyPiece(piece) && this.state.pieceCanMove(piece);
   };
   private isMyPiece = (piece: Piece) => Utils.isPieceOfColor(this.turn)(piece);
+  switchSides = () => (this.board = this.board.reverse().map((column) => column.reverse()));
 }

@@ -6,11 +6,7 @@
           <!-- <img *ngIf="getPiece(tile)" [src]="getSvg(tile)" /> -->
           <!-- <div>{{ tileToText(tile) }}</div> -->
           <!-- <div>({{ tile.row }}, {{ tile.col }})</div> -->
-          <!-- <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div> -->
-          <!-- <div *ngIf="isSelected(tile)">selected</div> -->
-          <!-- <div *ngIf="canAttackHere(tile)">can attack here</div> -->
           <!-- <div *ngIf="canInteract(tile)">can interact</div> -->
-          <!-- <img *ngIf="getPiece(tile)" src="assets/{{ getPiece(tile)?.color }}-{{ getPiece(tile)?.type }}.svg" /> -->
           <img *ngIf="canMoveHere(tile)" src="assets/can-move.svg" />
 
           <piece
@@ -28,6 +24,9 @@
 <div>{{ state.gameState() }}</div>
 <div>
   <button (click)="state.restart()">New game</button>
+</div>
+<div>
+  <button (click)="switchSides()">Switch sides</button>
 </div>
 <div>The following does not yet work</div>
 <div>
