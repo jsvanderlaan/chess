@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 45 45">
+    <defs>
+        <radialGradient id="interact">
+            <stop offset="50%" stop-color="transparent" />
+            <stop offset="80%" stop-color="green" />
+            <stop offset="100%" stop-color="transparent" />
+        </radialGradient>
+        <radialGradient id="attack">
+            <stop offset="50%" stop-color="transparent" />
+            <stop offset="80%" stop-color="red" />
+            <stop offset="100%" stop-color="transparent" />
+        </radialGradient>
+        <radialGradient id="selected">
+            <stop offset="50%" stop-color="transparent" />
+            <stop offset="80%" stop-color="blue" />
+            <stop offset="100%" stop-color="transparent" />
+        </radialGradient>
+    </defs>
+
+
+
+    <g *ngIf="canInteract">
+        <circle cx="50%" cy="50%" r="20" fill="url('#interact')"></circle>
+    </g>
+    <g *ngIf="isSelected">
+        <circle cx="50%" cy="50%" r="20" fill="url('#selected')"></circle>
+    </g>
+    <g *ngIf="canAttackHere">
+        <circle cx="50%" cy="50%" r="20" fill="url('#attack')"></circle>
+    </g>
+
+    <g
+        style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+
+        <g white-king *ngIf="isPiece('white-king')" />
+        <g white-queen *ngIf="isPiece('white-queen')" />
+        <g white-bishop *ngIf="isPiece('white-bishop')" />
+        <!-- <g white-knight *ngIf="isPiece('white-knight')" /> -->
+        <g white-giraffe *ngIf="isPiece('white-knight')" />
+        <g white-rook *ngIf="isPiece('white-rook')" />
+        <g white-pawn *ngIf="isPiece('white-pawn')" />
+        <g black-king *ngIf="isPiece('black-king')" />
+        <g black-queen *ngIf="isPiece('black-queen')" />
+        <g black-bishop *ngIf="isPiece('black-bishop')" />
+        <!-- <g black-knight *ngIf="isPiece('black-knight')" /> -->
+        <g black-giraffe *ngIf="isPiece('black-knight')" />
+        <g black-rook *ngIf="isPiece('black-rook')" />
+        <g black-pawn *ngIf="isPiece('black-pawn')" />
+    </g>
+
+</svg>

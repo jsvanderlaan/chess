@@ -4,14 +4,21 @@
       <ng-container *ngFor="let tile of column">
         <div class="tile" (click)="onTileClick(tile)">
           <!-- <img *ngIf="getPiece(tile)" [src]="getSvg(tile)" /> -->
-          <img *ngIf="getPiece(tile)" src="assets/{{ getPiece(tile)?.color }}-{{ getPiece(tile)?.type }}.svg" />
           <!-- <div>{{ tileToText(tile) }}</div> -->
           <!-- <div>({{ tile.row }}, {{ tile.col }})</div> -->
           <!-- <div>{{ getPiece(tile)?.color }} {{ getPiece(tile)?.type }}</div> -->
           <!-- <div *ngIf="isSelected(tile)">selected</div> -->
           <!-- <div *ngIf="canAttackHere(tile)">can attack here</div> -->
           <!-- <div *ngIf="canInteract(tile)">can interact</div> -->
+          <!-- <img *ngIf="getPiece(tile)" src="assets/{{ getPiece(tile)?.color }}-{{ getPiece(tile)?.type }}.svg" /> -->
           <img *ngIf="canMoveHere(tile)" src="assets/can-move.svg" />
+
+          <piece
+            [piece]="getPiece(tile)"
+            [isSelected]="isSelected(tile)"
+            [canAttackHere]="canAttackHere(tile)"
+            [canInteract]="canInteract(tile)"
+          ></piece>
         </div>
       </ng-container>
     </div>
