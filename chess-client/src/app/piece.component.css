@@ -1,0 +1,28 @@
+.selected {
+  animation: bounce 1s;
+  animation-iteration-count: infinite;
+}
+
+.canAttack {
+  animation: fade 0.4s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5%);
+  }
+}
+
+@keyframes fade {
+  25% {
+    transform: translateX(-1%);
+  }
+  75% {
+    transform: translateX(1%);
+  }
+}

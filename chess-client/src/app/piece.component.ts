@@ -4,6 +4,7 @@ import { Color, Piece } from "src/interfaces";
 @Component({
   selector: "piece",
   templateUrl: "./piece.component.svg",
+  styleUrls: ["./piece.component.css"],
 })
 export class PieceComponent {
   @Input() piece: Piece;
