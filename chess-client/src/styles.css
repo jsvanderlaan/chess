@@ -5,7 +5,8 @@
 }
 
 :root {
-  --width: min(80vw, 80vh);
+  --board-width: min(80vw, 80vh);
+  --preview-width: min(300px, min(80vw, 80vh));
   --dark: #383838;
   --ligth: gray;
 }
@@ -13,46 +14,4 @@
 body {
   background-color: black;
   color: white;
-}
-
-.board {
-  width: var(--width);
-  margin: 0 auto;
-  margin-top: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  /* border: 2px gray solid; */
-}
-
-.tile {
-  width: calc(var(--width) / 8);
-  height: calc(var(--width) / 8);
-}
-
-.column:nth-child(even) .tile:nth-child(odd) {
-  background-color: var(--dark);
-}
-
-.column:nth-child(odd) .tile:nth-child(even) {
-  background-color: var(--dark);
-}
-
-.column:nth-child(even) .tile:nth-child(even) {
-  background-color: var(--ligth);
-}
-
-.column:nth-child(odd) .tile:nth-child(odd) {
-  background-color: var(--ligth);
-}
-
-.tile:hover {
-  color: red;
-}
-
-.selected {
-  background-color: lightskyblue;
-}
-
-.possible-move {
-  background-color: lightsteelblue;
 }

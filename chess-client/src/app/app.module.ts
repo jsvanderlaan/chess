@@ -2,7 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
 import { AppComponent } from "./app.component";
-import { PieceComponent } from "./piece.component";
+import { PieceComponent } from "./piece/piece.component";
 import { WhiteKingComponent } from "./pieces/white-king.component";
 import { WhiteQueenComponent } from "./pieces/white-queen.component";
 import { WhiteBishopComponent } from "./pieces/white-bishop.component";
@@ -17,11 +17,27 @@ import { BlackRookComponent } from "./pieces/black-rook.component";
 import { BlackPawnComponent } from "./pieces/black-pawn.component";
 import { WhiteGiraffeComponent } from "./pieces/white-giraffe.component";
 import { BlackGiraffeComponent } from "./pieces/black-giraffe.component";
+import { GameComponent } from "./game/game.component";
+import { OverviewComponent } from "./overview/overview.component";
+import { HttpClientModule } from "@angular/common/http";
+import { NameComponent } from "./name/name.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { PreviewComponent } from "./preview/preview.component";
+import { RouterModule, Routes } from "@angular/router";
+
+const routes: Routes = [
+  { path: "", component: OverviewComponent },
+  { path: ":id", component: GameComponent },
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     PieceComponent,
+    GameComponent,
+    OverviewComponent,
+    NameComponent,
+    PreviewComponent,
 
     WhiteKingComponent,
     WhiteQueenComponent,
@@ -39,7 +55,7 @@ import { BlackGiraffeComponent } from "./pieces/black-giraffe.component";
     BlackRookComponent,
     BlackPawnComponent,
   ],
-  imports: [BrowserModule],
+  imports: [BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot(routes)],
   providers: [],
   bootstrap: [AppComponent],
 })

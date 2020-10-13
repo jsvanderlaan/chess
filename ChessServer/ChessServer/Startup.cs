@@ -1,3 +1,6 @@
+using ChessServer.Entities.Factories;
+using ChessServer.State;
+using ChessServer.ViewModels.Factories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +18,13 @@ namespace ChessServer
         public void ConfigureServices(IServiceCollection services) =>
             services
                 .AddSingleton<GameState>()
+                .AddSingleton<UserState>()
+
+                .AddSingleton<GameFactory>()
+                .AddSingleton<GameViewModelFactory>()
+                .AddSingleton<GameOverviewViewModelFactory>()
+                .AddSingleton<UserViewModelFactory>()
+
                 .AddCors(options =>
                     options.AddPolicy(
                         name: _chessClientOrigin,
@@ -23,12 +33,18 @@ namespace ChessServer
                                 .WithOrigins(_chessClientUrl)
                                 .AllowCredentials()
                                 .AllowAnyHeader()))
+                .AddMvc().Services
                 .AddSignalR();
 
         public void Configure(IApplicationBuilder app) => 
             app
                 .UseRouting()
                 .UseCors(_chessClientOrigin)
-                .UseEndpoints(endpoints => endpoints.MapHub<ChessHub>(""));
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapHub<OverviewHub>("/overview");
+                    endpoints.MapHub<GameHub>("/game");
+                });
     }
 }

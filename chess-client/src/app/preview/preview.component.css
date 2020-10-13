@@ -1,0 +1,29 @@
+.board {
+  width: var(--preview-width);
+  margin: 0 auto;
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  /* border: 2px gray solid; */
+}
+
+.tile {
+  width: calc(var(--preview-width) / 8);
+  height: calc(var(--preview-width) / 8);
+}
+
+.column:nth-child(even) .tile:nth-child(odd) {
+  background-color: var(--dark);
+}
+
+.column:nth-child(odd) .tile:nth-child(even) {
+  background-color: var(--dark);
+}
+
+.column:nth-child(even) .tile:nth-child(even) {
+  background-color: var(--ligth);
+}
+
+.column:nth-child(odd) .tile:nth-child(odd) {
+  background-color: var(--ligth);
+}

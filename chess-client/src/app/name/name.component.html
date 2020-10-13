@@ -1,0 +1,8 @@
+
+
+<form [formGroup]="nameForm"  (ngSubmit)="onSubmit(nameForm.value)">
+    <div *ngIf="!editing"> {{name}} </div>
+    <button *ngIf="!editing" (click)="edit()">edit</button>
+    <input *ngIf="editing" id="name" type="text" formControlName="name">
+    <button *ngIf="editing" class="button" type="submit">Save</button>
+  </form>

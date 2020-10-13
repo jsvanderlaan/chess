@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Attack, Color, GameState, Move, Piece, Type } from "src/interfaces";
-import { HubService } from "./hub.service";
+import { Attack, Color, Game, GameState, Move, Piece, Type, User } from "src/interfaces";
+import { GameHub } from "./game.hub";
 import { Utils } from "./utils";
 
 @Injectable({
   providedIn: "root",
 })
-export class StateService {
+export class GameStateService {
+  private gameId: string;
+
   private readonly states: BehaviorSubject<Piece[][]> = new BehaviorSubject([]);
   private readonly turn: BehaviorSubject<Color> = new BehaviorSubject(Color.white);
   private readonly selected: BehaviorSubject<Piece> = new BehaviorSubject(null);
@@ -17,11 +19,13 @@ export class StateService {
   pieces: Piece[] = [];
   moves: Move[] = [];
   attacks: Attack[] = [];
+  userWhite: User;
+  userBlack: User;
 
   pieceCanMove = (piece: Piece) =>
     this.moves.filter(Utils.moveIsOfPiece(piece)).length > 0 || this.attacks.filter(Utils.attackIsOfPiece(piece)).length > 0;
 
-  constructor(private _hub: HubService) {
+  constructor(private _gameHub: GameHub) {
     this.states.subscribe((states) => {
       if (!states || states.length === 0) return;
       this.currentStates = states;
@@ -30,15 +34,24 @@ export class StateService {
       this.moves = Utils.filteredMoves(this.pieces, this.attacks);
     });
     this.turn.subscribe((turn) => (this.currentTurn = turn));
-    _hub.connection.on("newGame", (whitesTurn, states) => {
-      this.states.next(states);
-      this.turn.next(whitesTurn ? Color.white : Color.black);
+    _gameHub.connection.on("GameState", (game: Game) => {
+      this.userWhite = game.whiteUser;
+      this.userBlack = game.blackUser;
+      this.states.next(game.positions);
+      this.turn.next(game.whitesTurn ? Color.white : Color.black);
     });
-    _hub.connection.on("newState", (whitesTurn, state) => {
+    _gameHub.connection.on("AddPosition", (state, whitesTurn) => {
       this.states.next([...this.currentStates, state]);
       this.turn.next(whitesTurn ? Color.white : Color.black);
     });
   }
+
+  subscribe = (gameId) => {
+    this.gameId = gameId;
+    this._gameHub.subscribe(gameId);
+  };
+
+  disconnect = () => this._gameHub.connection.stop();
 
   turn$ = (): Observable<Color> => this.turn.asObservable();
   selected$ = (): Observable<Piece | null> => this.selected.asObservable();
@@ -70,7 +83,7 @@ export class StateService {
       stateAfterMove = stateAfterMove.map((piece) => (Utils.isSamePosition(piece)(move.target) ? { ...piece, type: Type.queen } : piece));
     }
 
-    this._hub.connection.send("addState", stateAfterMove);
+    this._gameHub.connection.send("AddPosition", this.gameId, stateAfterMove);
     this.deselectPiece();
   };
   attackPiece = (attack: Attack) => {
@@ -83,11 +96,11 @@ export class StateService {
       );
     }
 
-    this._hub.connection.send("addState", stateAfterAttack);
+    this._gameHub.connection.send("AddPosition", this.gameId, stateAfterAttack);
     this.deselectPiece();
   };
 
-  restart = () => this._hub.connection.send("restart");
+  restart = () => this._gameHub.connection.send("Restart", this.gameId);
 
   selectPiece = (piece: Piece): void => this.selected.next(piece);
   deselectPiece = () => this.selected.next(null);

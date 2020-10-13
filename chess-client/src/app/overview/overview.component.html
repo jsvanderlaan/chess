@@ -1,0 +1,12 @@
+<name-form></name-form>
+<button (click)="newGame()">New Game</button>
+
+<div *ngFor="let game of gameList">
+  <preview  [pieces]="game.position"></preview>
+  <div *ngIf="game.whiteUser">white player: {{ game.whiteUser.name }}</div>
+  <button *ngIf="!game.whiteUser" (click)="joinWhite(game.id)">play white</button>
+  <div *ngIf="game.blackUser">black player: {{ game.blackUser.name }}</div>
+  <button *ngIf="!game.blackUser" (click)="joinBlack(game.id)">play black</button>
+  <button (click)="spactate(game.id)">spactate</button>
+  <button (click)="deleteGame(game.id)">delete</button>
+</div>

@@ -1,3 +1,22 @@
+export interface User {
+  id: string;
+  name: string;
+}
+
+export interface Game {
+  whiteUser: User;
+  blackUser: User;
+  positions: Piece[][];
+  whitesTurn: boolean;
+}
+
+export interface GameOverview {
+  position: Piece[];
+  whiteUser: User;
+  blackUser: User;
+  id: string;
+}
+
 export interface Piece {
   type: Type;
   row: number;
