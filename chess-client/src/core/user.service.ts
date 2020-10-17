@@ -36,7 +36,7 @@ export class UserService {
 
   joinGame = (gameId: string, white: boolean) => {
     var { id } = this.get();
-    this._http.post(`${environment.api}/user/joingame?gameId=${gameId}&userId=${id}&white=${white}`, {}).subscribe();
+    this._http.get(`${environment.api}/user/joingame?gameId=${gameId}&userId=${id}&white=${white}`).subscribe();
   };
 
   get = (): User => JSON.parse(localStorage.getItem(this._userKey));
@@ -44,6 +44,6 @@ export class UserService {
   private set = (user: User) => localStorage.setItem(this._userKey, JSON.stringify(user));
   private update = ({ id, name }: User) => {
     this.set({ id, name });
-    this._http.post(`${environment.api}/user/signup?id=${id}&name=${name}`, {}).subscribe();
+    this._http.get(`${environment.api}/user/signup?id=${id}&name=${name}`).subscribe();
   };
 }

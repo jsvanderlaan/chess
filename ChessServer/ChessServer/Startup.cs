@@ -31,20 +31,22 @@ namespace ChessServer
                         builder =>
                             builder
                                 .WithOrigins(_chessClientUrl)
-                                .AllowCredentials()
-                                .AllowAnyHeader()))
-                .AddMvc().Services
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials()))
+
+                .AddControllers().Services
                 .AddSignalR();
 
-        public void Configure(IApplicationBuilder app) => 
+        public void Configure(IApplicationBuilder app) =>
             app
                 .UseRouting()
                 .UseCors(_chessClientOrigin)
                 .UseEndpoints(endpoints =>
                 {
-                    endpoints.MapControllers();
                     endpoints.MapHub<OverviewHub>("/overview");
                     endpoints.MapHub<GameHub>("/game");
+                    endpoints.MapControllers();
                 });
     }
 }

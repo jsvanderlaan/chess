@@ -1,2 +1,5 @@
-﻿scp -r publish jurre@rpi-white.local:/tmp/api.jurre.dev
+﻿publish 
+scp -r /e/dev/projects/chess/ChessServer/ChessServer/bin/Release/netcoreapp3.1/publish jurre@rpi-white.local:/tmp/api.jurre.dev
 sudo /code/deploy-rpi/nginx-dotnet.sh -n api.jurre.dev -p 5000 -d ChessServer
+sudo systemctl stop api.jurre.dev.service
+sudo systemctl start api.jurre.dev.service

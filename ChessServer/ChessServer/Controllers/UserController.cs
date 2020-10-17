@@ -15,14 +15,14 @@ namespace ChessServer.Controllers
             _gameState = gameState;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("signup")]
         public void SignUp(string id, string name)
         {
             _userState.SignUp(id, name);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("joingame")]
         public void JoinGame(string gameId, string userId, bool white)
         {
