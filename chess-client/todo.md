@@ -3,6 +3,10 @@
 - [x] Castling / Rokade
 - [ ] En Passant
 - [ ] Pawn to other side
+- [ ] name form validation + max length
+- [ ] overview
+  - [ ] spinner
+  - [ ] 
 
 ## Nice to have
 

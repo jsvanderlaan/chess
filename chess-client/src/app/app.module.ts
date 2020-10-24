@@ -22,8 +22,12 @@ import { OverviewComponent } from "./overview/overview.component";
 import { HttpClientModule } from "@angular/common/http";
 import { NameComponent } from "./name/name.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { PreviewComponent } from "./preview/preview.component";
 import { RouterModule, Routes } from "@angular/router";
+import { PreviewComponent } from "./overview/overview-item/preview/preview.component";
+import { OverviewItemComponent } from "./overview/overview-item/overview-item.component";
+import { HeaderComponent } from "./layout/header/header.component";
+import { NewGameComponent } from "./overview/new-game/new-game.component";
+import { PlayerDisplayComponent } from "./player-display/player-display.component";
 
 const routes: Routes = [
   { path: "", component: OverviewComponent },
@@ -33,11 +37,17 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
+
     PieceComponent,
     GameComponent,
     OverviewComponent,
+    OverviewItemComponent,
+    NewGameComponent,
     NameComponent,
     PreviewComponent,
+
+    PlayerDisplayComponent,
 
     WhiteKingComponent,
     WhiteQueenComponent,

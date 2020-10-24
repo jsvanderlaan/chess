@@ -1,0 +1,13 @@
+.new-game-container {
+  margin: 2em 0;
+  display: flex;
+  justify-content: center;
+}
+
+.new-game-button {
+  border: 1px solid white;
+  padding: 1em 0;
+  width: var(--preview-width);
+  cursor: pointer;
+  text-align: center;
+}

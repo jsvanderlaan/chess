@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace ChessServer.State
 {
@@ -45,6 +46,14 @@ namespace ChessServer.State
         public IReadOnlyCollection<string> GetAllIds()
         {
             return _games.Keys.ToImmutableList();
+        }
+
+        public IReadOnlyCollection<string> GetUserGames(string userId)
+        {
+            return _games
+                .Where(keyValuePair => keyValuePair.Value.WhiteUserId == userId || keyValuePair.Value.BlackUserId == userId)
+                .Select(keyValuePair => keyValuePair.Key)
+                .ToList();
         }
 
         public void Delete(string gameId)

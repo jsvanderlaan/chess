@@ -32,11 +32,11 @@ export enum Color {
 }
 
 export enum GameState {
-  whitesTurn = "White's turn",
-  BlacksTurn = "Black's turn",
-  whiteWin = "White wins",
-  blackWin = "Black wins",
-  remise = "Remise",
+  whitesTurn = "white's turn",
+  BlacksTurn = "black's turn",
+  whiteWin = "white wins",
+  blackWin = "black wins",
+  remise = "remise",
 }
 
 export interface Position {

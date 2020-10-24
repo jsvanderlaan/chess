@@ -1,0 +1,16 @@
+<div class="board">
+  <ng-container *ngFor="let column of board">
+    <div class="column">
+      <ng-container *ngFor="let tile of column">
+        <div class="tile">
+          <piece
+            [piece]="getPiece(tile)"
+            [isSelected]="false"
+            [canAttackHere]="false"
+            [canInteract]="false"
+          ></piece>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

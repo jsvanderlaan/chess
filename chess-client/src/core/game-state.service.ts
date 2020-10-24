@@ -44,6 +44,10 @@ export class GameStateService {
       this.states.next([...this.currentStates, state]);
       this.turn.next(whitesTurn ? Color.white : Color.black);
     });
+    _gameHub.connection.on("UserUpdate", (whiteUser: User, blackUser: User) => {
+      this.userWhite = whiteUser;
+      this.userBlack = blackUser;
+    });
   }
 
   subscribe = (gameId) => {

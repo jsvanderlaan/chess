@@ -1,0 +1,18 @@
+<div class="overview-item-container" (click)="spactate(game.id)">
+    <preview [pieces]="game.position"></preview>
+    <div class="overview-item-meta-data">
+        <div class="meta-data-row">
+            <div class="delete-button" (click)="deleteGame(game.id, $event)">
+                ×
+            </div>
+        </div>
+        <player-display class="meta-data-row" [gameId]="game.id" [player]="game.blackUser" [white]="false"></player-display>
+        <div class="meta-data-row">
+            <div class="vs">
+                vs
+            </div>
+        </div>
+        <player-display class="meta-data-row" [gameId]="game.id" [player]="game.whiteUser" [white]="true"></player-display>
+        <div class="meta-data-row">&nbsp;</div>
+    </div>
+</div>

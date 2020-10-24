@@ -5,6 +5,7 @@ import { UserService } from "src/core/user.service";
 @Component({
   selector: "name-form",
   templateUrl: "./name.component.html",
+  styleUrls: ["./name.component.css"],
 })
 export class NameComponent {
   nameForm;

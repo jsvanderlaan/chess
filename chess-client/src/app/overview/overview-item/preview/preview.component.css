@@ -1,10 +1,7 @@
 .board {
   width: var(--preview-width);
-  margin: 0 auto;
-  margin-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  /* border: 2px gray solid; */
 }
 
 .tile {

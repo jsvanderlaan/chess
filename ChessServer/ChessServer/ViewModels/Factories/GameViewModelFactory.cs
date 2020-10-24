@@ -17,6 +17,12 @@ namespace ChessServer.ViewModels.Factories
         public GameViewModel Get(string gameId)
         {
             var game = _gameState.Get(gameId);
+
+            if(game == null)
+            {
+                return null;
+            }
+
             var whiteUser = _userViewModelFactory.Get(game.WhiteUserId);
             var blackUser = _userViewModelFactory.Get(game.BlackUserId);
 

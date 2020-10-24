@@ -1,7 +1,6 @@
 .board {
   width: var(--board-width);
-  margin: 0 auto;
-  margin-top: 2rem;
+  margin: 1em auto;
   display: flex;
   flex-wrap: wrap;
   /* border: 2px gray solid; */
@@ -26,4 +25,30 @@
 
 .column:nth-child(odd) .tile:nth-child(odd) {
   background-color: var(--ligth);
+}
+
+.back-button {
+  display: block;
+  font-weight: bold;
+  font-size: x-large;
+  padding: 0 10%;
+  text-decoration: none;
+  color: white;
+  text-shadow: 1px 0 0 #fff, 0 -1px 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff;
+}
+
+.back-button:hover {
+  color: blue;
+}
+
+.game-log-container {
+  margin-top: 1em;
+  color: gray;
+  width: 100%;
+}
+
+.game-log {
+  font-size: small;
+  margin: 0 auto;
+  text-align: center;
 }

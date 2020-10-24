@@ -1,0 +1,6 @@
+<div class="player-row">
+    <div [className]="white ? 'player-white': 'player-black'">
+        <div *ngIf="player?.name">{{ player?.name }}</div>
+        <div class="play-button" *ngIf="!player?.name" (click)="join($event)">-play-</div>
+    </div>
+</div>

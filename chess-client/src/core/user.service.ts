@@ -9,7 +9,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export class UserService {
   private readonly _userKey = "user";
-  private readonly _defaultNames = ["Anonymous"];
+  private readonly _defaultNames = ["unknown"];
 
   constructor(private readonly _http: HttpClient) {}
 
