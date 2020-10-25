@@ -31,7 +31,7 @@ export class GameComponent implements OnInit, OnDestroy {
   logs: string[] = [];
 
   get board() {
-    return this.whiteAtBottom ? this._board : this._board.reverse().map((column) => column.reverse());
+    return this.whiteAtBottom ? this._board : [...this._board].reverse().map((column) => [...column].reverse());
   }
 
   constructor(readonly state: GameStateService, private route: ActivatedRoute, private readonly _userService: UserService) {
