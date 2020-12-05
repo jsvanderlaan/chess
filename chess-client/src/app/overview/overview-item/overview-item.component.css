@@ -23,18 +23,19 @@
   font-size: xx-large;
   padding: 0 1em;
   margin: auto 0;
-  text-shadow: 1px 0 0 #fff, 0 -1px 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff;
 }
 
 .vs {
   margin: 0 auto;
   color: gray;
+  text-shadow: 1px 0 0 #fff, 0 -1px 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff;
 }
 
 .delete-button {
   cursor: pointer;
   color: gray;
   margin-left: auto;
+  text-shadow: 1px 0 0 #fff, 0 -1px 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff;
 }
 .delete-button:hover {
   color: red;
